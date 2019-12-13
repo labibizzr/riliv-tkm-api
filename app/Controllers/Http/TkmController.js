@@ -9,7 +9,7 @@
  */
 class TkmController {
 
-  async index(){
+  async getSoal(){
 
     const tkmSoal = use('App/Models/TkmSoal')
 
@@ -19,6 +19,10 @@ class TkmController {
 
     return soalJSON
   }
+
+  async store
+
+
 }
 
 module.exports = TkmController

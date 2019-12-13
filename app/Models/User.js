@@ -7,6 +7,19 @@ const Model = use('Model')
 const Hash = use('Hash')
 
 class User extends Model {
+
+  static get table () {
+    return 'Users'
+  }
+
+  static get createdAtColumn () {
+    return 'createdAt'
+  }
+
+  static get updatedAtColumn () {
+    return 'updatedAt'
+  }
+
   static boot () {
     super.boot()
 

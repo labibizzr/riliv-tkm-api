@@ -21,6 +21,8 @@ Route.get('/', () => {
 })
 
 Route.group(() => {
-  Route.get('/','TkmController.index')
+  Route.get('/tkm/soal','TkmController.getSoal')
+  Route.post('/tkm/jawaban')
+  Route.post('/auth/login','AuthController.login')
 })
 .prefix('api/v0/tkm')
