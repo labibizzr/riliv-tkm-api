@@ -8,6 +8,7 @@ class AuthController {
 
     let data = request.all()
 
+    // return data
     let userData =
       {
         email : data.email,
@@ -20,9 +21,15 @@ class AuthController {
 
     let token = await auth.generate(user)
 
-    Object.assign(user,token)
+    let userId = {
+      user_id : user.id
+    }
 
-    return response.json(user)
+
+    // Append token to user
+    Object.assign(userId,token)
+
+    return response.json(userId)
 
   }
 

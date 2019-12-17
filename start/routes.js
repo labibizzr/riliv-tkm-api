@@ -20,9 +20,13 @@ Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
 
+
 Route.group(() => {
-  Route.get('/tkm/soal','TkmController.getSoal')
-  Route.post('/tkm/jawaban')
+  Route.get('/soal','TkmController.getSoal')
+  Route.post('/answers','TkmController.store')
   Route.post('/auth/login','AuthController.login')
 })
 .prefix('api/v0/tkm')
+
+
+Route.post('/dummy','DummyController.post')

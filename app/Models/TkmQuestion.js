@@ -3,13 +3,7 @@
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = use('Model')
 
-class TkmSoal extends Model {
-
-  static get table(){
-    return 'TkmSoal'
-  }
-
+class TkmQuestion extends Model {
 }
 
-
-module.exports = TkmSoal
+module.exports = TkmQuestion
