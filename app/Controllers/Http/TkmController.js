@@ -11,7 +11,9 @@ const {
   validate
 } = use('Validator')
 const User = use('App/Models/User')
-
+const tkmResult = use('App/Models/TkmResult')
+const tkmQuestion = use('App/Models/TkmQuestion')
+const Database = use('Database')
 class TkmController {
 
   async getSoal({
@@ -28,8 +30,7 @@ class TkmController {
   async store({request,response}) {
 
 
-    const tkmResult = use('App/Models/TkmResult')
-    const tkmQuestion = use('App/Models/TkmQuestion')
+
     let payload = request.all()
 
     const rules = {
@@ -81,6 +82,86 @@ class TkmController {
       }
     }
 
+  //fungsi ambil result sesuai id_user (ambil paling akhir)
+   async getResult({request, response}){
+     try {
+       let payload = request.all()
+
+       let user_id = payload.user_id
+
+
+
+       let resultData = await Database
+         .select('*')
+         .from('tkm_results')
+         .where('user_id', '=', user_id)
+         .orderBy('id', 'desc')
+         .limit(1)
+
+      let level = this.evaluateLevel(resultData[0])
+
+
+       let data = {
+         user_id: user_id,
+         depression_score: resultData[0].depression_score,
+         anxiety_score: resultData[0].anxiety_score,
+         stress_score: resultData[0].stress_score,
+         depression_level : level.depression,
+         anxiety_level : level.anxiety,
+         stress_level : level.stress
+       }
+       return data
+     } catch (error) {
+       return response.badRequest("Something's wrong")
+     }
+    }
+
+  //input object JSON dengan nilai score DAS
+  //output object JSOn dengan LEVEL DAS
+  evaluateLevel(payload){
+
+    let level = {}
+
+    let d_score = payload.depression_score
+    let a_score = payload.anxiety_score
+    let s_score = payload.stress_score
+
+    if(d_score<=9)
+    level.depression="Normal"
+    else if(d_score<=13)
+    level.depression="Ringan"
+    else if(d_score<=20)
+    level.depression="Sedang"
+    else if(d_score<=27)
+    level.depression="Parah"
+    else if(d_score>=28)
+    level.depression="Sangat Parah"
+
+    if(a_score<=9)
+    level.anxiety="Normal"
+    else if(a_score<=13)
+    level.anxiety="Ringan"
+    else if(a_score<=20)
+    level.anxiety="Sedang"
+    else if(a_score<=27)
+    level.anxiety="Parah"
+    else if(a_score>=28)
+    level.anxiety="Sangat Parah"
+
+    if(s_score<=9)
+    level.stress="Normal"
+    else if(s_score<=13)
+    level.stress="Ringan"
+    else if(s_score<=20)
+    level.stress="Sedang"
+    else if(s_score<=27)
+    level.stress="Parah"
+    else if(s_score>=28)
+    level.stress="Sangat Parah"
+
+    return level
+
+  }
 
   //function to ngitung nilai
   evaluateScores(questions){

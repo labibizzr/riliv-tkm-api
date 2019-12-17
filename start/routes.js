@@ -23,6 +23,7 @@ Route.get('/', () => {
 
 Route.group(() => {
   Route.get('/soal','TkmController.getSoal')
+  Route.get('/result','TkmController.getResult')
   Route.post('/answers','TkmController.store')
   Route.post('/auth/login','AuthController.login')
 })
