@@ -27,8 +27,12 @@ class TkmController {
     return soal
   }
 
-  async store({request,response}) {
+  async storeAddress({request, response}){
 
+  }
+
+  //menyimpan jawaban user
+  async store({request,response}) {
 
 
     let payload = request.all()
@@ -90,7 +94,7 @@ class TkmController {
        let user_id = payload.user_id
 
 
-
+      //get latest result from table
        let resultData = await Database
          .select('*')
          .from('tkm_results')
