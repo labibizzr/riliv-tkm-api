@@ -120,7 +120,7 @@ class TkmController {
   //fungsi ambil result sesuai id_user (ambil paling akhir)
    async getResult({ response, params}){
      try {
-       let payload = request.all()
+
 
        let user_id = params.userId
 
