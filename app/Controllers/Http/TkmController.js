@@ -7,9 +7,7 @@
 /**
  * Resourceful controller for interacting with tkms
  */
-const {
-  validate
-} = use('Validator')
+const { validate } = use('Validator')
 const User = use('App/Models/User')
 const tkmResult = use('App/Models/TkmResult')
 const tkmQuestion = use('App/Models/TkmQuestion')
@@ -28,6 +26,39 @@ class TkmController {
   }
 
   async storeAddress({request, response}){
+
+    let payload = request.all()
+
+    const rules = {
+      user_id: 'required|integer',
+      provinsi: 'required',
+      'kabupaten': 'required',
+      'kecamatan': 'required',
+      'alamat': 'required'
+    }
+
+    const validation = await validate(payload, rules)
+
+    if (validation.fails()) {
+      return response.badRequest(validation.messages())
+    } else {
+      let user = await User.find(payload.user_id)
+
+      //bila ga ada user
+      if (user == null) {
+        return response.badRequest('User not found')
+      } else {
+
+        let address = payload.provinsi + ';' + payload.kabupaten+ ';' + payload.kecamatan + ';' + payload.alamat
+
+        user.address = address
+        await user.save()
+        return response.json({
+          user_id: payload.user_id,
+          messages: 'Request success'
+        })
+      }
+    }
 
   }
 
@@ -87,11 +118,11 @@ class TkmController {
     }
 
   //fungsi ambil result sesuai id_user (ambil paling akhir)
-   async getResult({request, response}){
+   async getResult({ response, params}){
      try {
        let payload = request.all()
 
-       let user_id = payload.user_id
+       let user_id = params.userId
 
 
       //get latest result from table

@@ -22,10 +22,17 @@ Route.get('/', () => {
 
 
 Route.group(() => {
-  Route.get('/soal','TkmController.getSoal')
-  Route.get('/result','TkmController.getResult')
+  Route.get('/soal','TkmController.getSoal') //get all soal
+  Route.get('/result/:userId','TkmController.getResult') //get latest result from userId
+  //submit jawaban
+  //data needed
+  // object "user_id"
+  // array jawaban
   Route.post('/answers','TkmController.store')
-  Route.post('/auth/login','AuthController.login')
+
+  Route.post('/auth/login','AuthController.login') //login
+
+  Route.post('/user/address','TkmController.storeAddress') //simpan address
 })
 .prefix('api/v0/tkm')
 

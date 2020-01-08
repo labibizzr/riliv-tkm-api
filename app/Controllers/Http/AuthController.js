@@ -31,6 +31,7 @@ class AuthController {
       newUser.name = userData.name
       newUser.roleId = '2'
       await newUser.save()
+      
       let token = await auth.generate(newUser)
 
       let newUserId = {
