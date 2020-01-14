@@ -31,8 +31,8 @@ Route.group(() => {
   Route.post('/answers','TkmController.store')
 
   Route.post('/auth/login','AuthController.login') //login
+  Route.post('/user/register','AuthController.register') //simpan address
 
-  Route.post('/user/address','TkmController.storeAddress') //simpan address
 })
 .prefix('api/v0/tkm')
 

@@ -2,13 +2,11 @@
 const User = use('App/Models/User')
 const Database = use('Database')
 const moment = use('Moment')
-
+const { validate } = use('Validator')
 class AuthController {
 
 
   async login({ request, auth, response }){
-
-
     let data = request.all()
 
     // return data
@@ -31,7 +29,7 @@ class AuthController {
       newUser.name = userData.name
       newUser.roleId = '2'
       await newUser.save()
-      
+
       let token = await auth.generate(newUser)
 
       let newUserId = {
@@ -90,7 +88,7 @@ class AuthController {
         let token = await auth.generate(user)
 
         let userId = {
-          user_id:user.id
+          user_id: user.id
         }
 
 
@@ -102,9 +100,55 @@ class AuthController {
 
 
     }
+    }
 
+    async register({request, response}){
+
+      let payload = request.all()
+
+      const rules = {
+        'user_id' : 'required|integer',
+        'provinsi' : 'required',
+        'kabupaten': 'required',
+        'kecamatan': 'required',
+        'alamat' : 'required',
+        'name'  : 'required',
+        'nik' : 'required',
+        'phone' : 'required',
+        'gender' : 'required'
+
+      }
+
+      const validation = await validate(payload, rules)
+
+      if (validation.fails()) {
+        return response.badRequest(validation.messages())
+      } else {
+        let user = await User.find(payload.user_id)
+
+        //bila ga ada user
+        if (user == null) {
+          return response.badRequest('User not found')
+        } else {
+
+          let address = payload.provinsi + ';' + payload.kabupaten+ ';' + payload.kecamatan + ';' + payload.alamat
+
+          user.address = address
+          user.name = payload.name
+          user.nik = payload.nik
+          user.phone = payload.phone
+          user.gender = payload.gender
+
+          await user.save()
+          return response.json({
+            user_id: payload.user_id,
+            messages: 'Request success'
+          })
+        }
+      }
 
     }
+
 
   // This should work in node.js and other ES5 compliant implementations.
   isEmptyObject(obj) {
