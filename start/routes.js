@@ -22,17 +22,24 @@ Route.get('/', () => {
 
 
 Route.group(() => {
-  Route.get('/soal','TkmController.getSoal') //get all soal
-  Route.get('/result/:userId','TkmController.getResult') //get latest result from userId
+  //get all soal
+  Route.get('/soal','TkmController.getSoal')
+  //get latest result from userId
+  Route.get('/result/:userId','TkmController.getResult')
   //submit jawaban
   //data needed
   // object "user_id"
   // array jawaban
-  Route.post('/answers','TkmController.store') //post jawaban sekaligus menghitung nilai
 
-  Route.post('/auth/login','AuthController.login') //login, ada validasi check 10 hari
-  Route.post('/user/register','AuthController.register') //simpan informasi2 tambahan
-  Route.get('user/register/check/:userId','AuthController.checkUser') //check apakah user sudah register (mengisi data) atau belum. Return status = 0 jika belum, status = 1 jika sudah
+  //post jawaban sekaligus menghitung nilai
+  Route.post('/answers','TkmController.store')
+
+  //login, ada validasi check 10 hari
+  Route.post('/auth/login','AuthController.login')
+  //simpan informasi2 tambahan
+  Route.post('/user/register','AuthController.register')
+  //check apakah user sudah register (mengisi data) atau belum. Return status = 0 jika belum, status = 1 jika sudah
+  Route.get('user/register/check/:userId','AuthController.checkUser')
 })
 .prefix('api/v0/tkm')
 

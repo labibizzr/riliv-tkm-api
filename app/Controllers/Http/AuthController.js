@@ -2,7 +2,9 @@
 const User = use('App/Models/User')
 const Database = use('Database')
 const moment = use('Moment')
-const { validate } = use('Validator')
+const {validate } = use('Validator')
+const {rule} = use('indicative')
+
 class AuthController {
 
 
@@ -138,18 +140,39 @@ class AuthController {
     async register({request, response}){
 
       let payload = request.all()
-
       const rules = {
-        'user_id' : 'required|integer',
-        'provinsi' : 'required',
-        'kabupaten': 'required',
-        'kecamatan': 'required',
-        'alamat' : 'required',
-        'name'  : 'required',
-        'nik' : 'required',
-        'phone' : 'required',
-        'gender' : 'required',
-        'birthdate' : 'required|date'
+        user_id: [
+            rule('required'),
+            rule('integer')
+        ],
+        provinsi: [
+          rule('required')
+        ],
+        kabupaten: [
+          rule('required')
+        ],
+        kecamatan: [
+          rule('required')
+        ],
+        alamat: [
+          rule('required')
+        ],
+        name: [
+          rule('required')
+        ],
+        nik: [
+          rule('required')
+        ],
+        phone: [
+          rule('required')
+        ],
+        gender: [
+          rule('required')
+        ],
+        birthdate: [
+          rule('required'),
+          rule('date')
+        ]
       }
       //date di navicat = YYYY/MM/DD
       //Format date yang dibutuhkan fungsi ini = YYYY/MM/DD
