@@ -152,6 +152,7 @@ class AuthController {
         'birthdate' : 'required|date'
       }
       //date di navicat = YYYY/MM/DD
+      //Format date yang dibutuhkan fungsi ini = YYYY/MM/DD
       const validation = await validate(payload, rules)
 
       if (validation.fails()) {
