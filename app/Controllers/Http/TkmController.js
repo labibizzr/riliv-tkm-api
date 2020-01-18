@@ -62,7 +62,7 @@ class TkmController {
 
   }
 
-  //menyimpan jawaban user
+  //menyimpan jawaban user sekaligus memberikan nilai terhadap jawaban tersebut
   async store({request,response}) {
 
 

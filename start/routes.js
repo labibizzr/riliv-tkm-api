@@ -28,11 +28,11 @@ Route.group(() => {
   //data needed
   // object "user_id"
   // array jawaban
-  Route.post('/answers','TkmController.store')
+  Route.post('/answers','TkmController.store') //post jawaban sekaligus menghitung nilai
 
-  Route.post('/auth/login','AuthController.login') //login
-  Route.post('/user/register','AuthController.register') //simpan address
-
+  Route.post('/auth/login','AuthController.login') //login, ada validasi check 10 hari
+  Route.post('/user/register','AuthController.register') //simpan informasi2 tambahan
+  Route.get('user/register/check/:userId','AuthController.checkUser') //check apakah user sudah register (mengisi data) atau belum. Return status = 0 jika belum, status = 1 jika sudah
 })
 .prefix('api/v0/tkm')
 

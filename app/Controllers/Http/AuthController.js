@@ -17,10 +17,13 @@ class AuthController {
       roleId: '2'
     }
 
+
+    //find user by field 'EMAIL'
     const user = await User.findBy('email', userData.email)
 
 
     // return user == null (tidak ada user dengan email yg sama)
+
     if (user == null) {
 
       let newUser = new User()
@@ -102,6 +105,36 @@ class AuthController {
     }
     }
 
+    async checkUser({response, params}){
+
+      console.log(params)
+
+      let userId = params.userId
+
+      let user = await User.find(userId) //cari user
+
+      if (user == null){ //apabila tidak ada user
+        return response.badRequest('User not found')
+      }
+      else{ //apabila ada user
+
+        if(user.birthdate == null){
+          var status = 0
+        }
+        else if(user.birthdate != null){
+         var status = 1
+        }
+
+        let data = {
+          status : status,
+          user_id : user.id
+        }
+
+        return response.json(data)
+      }
+
+    }
+
     async register({request, response}){
 
       let payload = request.all()
@@ -115,10 +148,10 @@ class AuthController {
         'name'  : 'required',
         'nik' : 'required',
         'phone' : 'required',
-        'gender' : 'required'
-
+        'gender' : 'required',
+        'birthdate' : 'required|date'
       }
-
+      //date di navicat = YYYY/MM/DD
       const validation = await validate(payload, rules)
 
       if (validation.fails()) {
@@ -138,6 +171,7 @@ class AuthController {
           user.nik = payload.nik
           user.phone = payload.phone
           user.gender = payload.gender
+          user.birthdate = payload.birthdate
 
           await user.save()
           return response.json({
