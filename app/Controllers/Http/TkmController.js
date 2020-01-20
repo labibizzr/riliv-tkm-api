@@ -90,7 +90,20 @@ class TkmController {
 
         tkm_result.user_id = payload.user_id
 
-        let scores = this.evaluateScores(payload.soal)
+        let answer_packet = payload.soal //answer_packet = semua jawaban yang diisi user dikirim melalui JSON
+
+        // loop semua answer packet
+        for (let item of answer_packet){
+          let id_soal = item.id
+
+          let soal = await tkmQuestion.find(id_soal)
+
+          item.type = soal.type
+        }
+
+
+        console.log(answer_packet)
+        let scores = this.evaluateScores(answer_packet)
 
         console.log(scores)
 
@@ -102,7 +115,7 @@ class TkmController {
 
         // console.log(payload.soal[0])
         let answerData = []
-          payload.soal.forEach((item,index)=>{
+          answer_packet.forEach((item,index)=>{
             answerData.push({
               question_id : item.id,
               score : item.answer,
