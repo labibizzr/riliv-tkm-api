@@ -1,7 +1,7 @@
 'use strict'
 const User = use('App/Models/User')
 const Database = use('Database')
-const moment = use('Moment')
+const moment = use('moment')
 const {validate } = use('Validator')
 const {rule} = use('indicative')
 
