@@ -8,7 +8,8 @@ const {rule} = use('indicative')
 class AuthController {
 
 
-  async login({ request, auth, response }){
+  async login({ request, auth, response })
+  {
     let data = request.all()
 
     // return data
@@ -35,7 +36,10 @@ class AuthController {
       newUser.roleId = '2'
       await newUser.save()
 
-      let token = await auth.generate(newUser)
+      let token = await auth
+                    // .withRefreshToken()
+                    .generate(newUser)
+
 
       let newUserId = {
         user_id: newUser.id
@@ -55,7 +59,7 @@ class AuthController {
       let latestResult = await Database //return array of object
         .select('*')
         .from('tkm_results')
-        .where('user_id', '=', 44)
+        .where('user_id', '=', user_id)
         .orderBy('created_at', 'desc')
         .limit(1)
 
@@ -75,11 +79,11 @@ class AuthController {
           }
           return response.status(402).send(payload)
         }
-        //jarak test lebih dari 10 hari
+        //jarak test lebih dari 10 hari (dibolehkan login)
         else {
-          let token = await auth.generate(user)
+          let token = await auth.withRefreshToken().generate(user)
           let userId = {
-            user_id: newUser.id
+            user_id: user_id
           }
 
           // Append token to user
@@ -90,7 +94,7 @@ class AuthController {
       //User sudah ada, belum pernah tes tkm
       else {
 
-        let token = await auth.generate(user)
+        let token = await auth.withRefreshToken().generate(user)
 
         let userId = {
           user_id: user.id
@@ -205,6 +209,15 @@ class AuthController {
         }
       }
 
+    }
+
+    async refreshToken({response, request, auth}){
+
+      const refreshToken = request.input('refresh_token')
+      console.log(refreshToken)
+      const newRefreshToken =  await auth.generateForRefreshToken(refreshToken)
+
+      return response.json(newRefreshToken)
     }
 
 

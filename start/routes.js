@@ -23,19 +23,24 @@ Route.get('/', () => {
 
 Route.group(() => {
   //get all soal
-  Route.get('/soal','TkmController.getSoal')
+  Route.get('/soal','TkmController.getSoal').middleware('auth')
   //get latest result from userId
-  Route.get('/result/:userId','TkmController.getResult')
+  Route.get('/result/:userId','TkmController.getResult').middleware('auth')
   //submit jawaban
   //data needed
   // object "user_id"
   // array jawaban
 
   //post jawaban sekaligus menghitung nilai
-  Route.post('/answers','TkmController.store')
+  Route.post('/answers','TkmController.store').middleware('auth')
 
   //login, ada validasi check 10 hari
   Route.post('/auth/login','AuthController.login')
+
+  //get refresh token
+  // input : Json Object isi variabel "refresh_token"
+  Route.get('auth/refreshToken','AuthController.refreshToken')
+
   //simpan informasi2 tambahan
   Route.post('/user/register','AuthController.register')
   //check apakah user sudah register (mengisi data) atau belum. Return status = 0 jika belum, status = 1 jika sudah
