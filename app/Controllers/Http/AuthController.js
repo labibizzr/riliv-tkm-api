@@ -220,6 +220,18 @@ class AuthController {
       return response.json(newRefreshToken)
     }
 
+    async checkToken({response,auth}){
+
+      //check token di body response
+      try {
+        // const result = await auth.getUser()
+        const result = await auth.check()
+        return response.json(result)
+
+      } catch (error) {
+        response.status(403).send('Missing or invalid jwt token')
+      }
+    }
 
   // This should work in node.js and other ES5 compliant implementations.
   isEmptyObject(obj) {

@@ -41,10 +41,15 @@ Route.group(() => {
   // input : Json Object isi variabel "refresh_token"
   Route.get('auth/refreshToken','AuthController.refreshToken')
 
+  // input : JSON isi variabel "token"
+  // ex : {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjE0MywiaWF0IjoxNTgxNDkxNTY3fQ.TRZijerUKoTASO1uPDBKpuo1VAhoAEZlKZPAHg8vshI"}
+  Route.post('auth/checkToken','AuthController.checkToken')
+
   //simpan informasi2 tambahan
   Route.post('/user/register','AuthController.register')
   //check apakah user sudah register (mengisi data) atau belum. Return status = 0 jika belum, status = 1 jika sudah
   Route.get('user/register/check/:userId','AuthController.checkUser')
+  Route.get('sheet','SheetController.write')
 })
 .prefix('api/v0/tkm')
 

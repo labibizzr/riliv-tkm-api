@@ -7,11 +7,15 @@
 /**
  * Resourceful controller for interacting with tkms
  */
-const { validate } = use('Validator')
-const User = use('App/Models/User')
-const tkmResult = use('App/Models/TkmResult')
-const tkmQuestion = use('App/Models/TkmQuestion')
-const Database = use('Database')
+const { validate }        = use('Validator')
+const User                = use('App/Models/User')
+const tkmResult           = use('App/Models/TkmResult')
+const tkmQuestion         = use('App/Models/TkmQuestion')
+const Database            = use('Database')
+const Env                 = use('Env')
+const {GoogleSpreadsheet} = require('google-spreadsheet')
+
+
 class TkmController {
 
   async getSoal({
@@ -124,13 +128,49 @@ class TkmController {
         })
         await tkmAnswer.createMany(answerData)
 
+        let level = this.evaluateLevel(tkm_result)
 
-        return response.status(201).send('Created')
+        var sheetData = {
+         depression_score: resultData.depression_score,
+         anxiety_score: resultData.anxiety_score,
+         stress_score: resultData.stress_score,
+         depression_level : level.depression,
+         anxiety_level : level.anxiety,
+         stress_level : level.stress
+        }
+        var publish_result = publishSheet(sheetData)
+
+        return response.status(201).send('Created')  
 
       }
     }
 
   //fungsi ambil result sesuai id_user (ambil paling akhir)
+  async publishSheet(data){
+    
+    try{
+    const doc = new GoogleSpreadsheet(Env.get('SPREADSHEET_ID'));
+
+    await doc.useServiceAccountAuth({
+      client_email: Env.get('GOOGLE_SERVICE_ACCOUNT_EMAIL'),
+      private_key: Env.get('GOOGLE_PRIVATE_KEY')
+    })
+
+    await doc.loadInfo()
+
+    console.log(doc.title)
+
+    const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id]
+
+    const newSheet = await sheet.addRow(data)
+
+    return response.status(201).send('Created')
+    }
+    catch(err){
+      return response.status(402).send(err)
+    }
+  }
+
    async getResult({ response, params}){
      try {
 
