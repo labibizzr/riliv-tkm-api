@@ -14,7 +14,7 @@ const tkmQuestion         = use('App/Models/TkmQuestion')
 const Database            = use('Database')
 const Env                 = use('Env')
 const {GoogleSpreadsheet} = require('google-spreadsheet')
-
+const moment = require('moment');
 
 class TkmController {
 
@@ -105,7 +105,6 @@ class TkmController {
           item.type = soal.type
         }
 
-
         console.log(answer_packet)
         let scores = this.evaluateScores(answer_packet)
 
@@ -131,40 +130,61 @@ class TkmController {
         let level = this.evaluateLevel(tkm_result)
 
         var sheetData = {
-         depression_score: resultData.depression_score,
-         anxiety_score: resultData.anxiety_score,
-         stress_score: resultData.stress_score,
+         user_id : payload.user_id,
+         depression_score: tkm_result.depression_score,
+         anxiety_score: tkm_result.anxiety_score,
+         stress_score: tkm_result.stress_score,
          depression_level : level.depression,
          anxiety_level : level.anxiety,
          stress_level : level.stress
         }
-        var publish_result = publishSheet(sheetData)
+        var publish_result = this.publishSheet(sheetData)
 
-        return response.status(201).send('Created')  
+        return response.status(201).send('Created')
 
       }
     }
 
   //fungsi ambil result sesuai id_user (ambil paling akhir)
   async publishSheet(data){
-    
+
     try{
-    const doc = new GoogleSpreadsheet(Env.get('SPREADSHEET_ID'));
 
-    await doc.useServiceAccountAuth({
-      client_email: Env.get('GOOGLE_SERVICE_ACCOUNT_EMAIL'),
-      private_key: Env.get('GOOGLE_PRIVATE_KEY')
-    })
+      const user = await User.find(data.user_id)
 
-    await doc.loadInfo()
+      const doc = new GoogleSpreadsheet(Env.get('SPREADSHEET_ID'));
 
-    console.log(doc.title)
+      await doc.useServiceAccountAuth({
+        client_email: Env.get('GOOGLE_SERVICE_ACCOUNT_EMAIL'),
+        private_key: Env.get('GOOGLE_PRIVATE_KEY')
+      })
 
-    const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id]
+      await doc.loadInfo()
 
-    const newSheet = await sheet.addRow(data)
+      var rowData = {
+        email : user.email,
+        alamat : user.address,
+        kecamatan : user.kecamatan,
+        nik : user.nik,
+        'jenis kelamin' : user.gender,
+        'tgl lahir' : moment(user.birthdate).format("D/MM/YYYY"),
+        'nilai depresi' : data.depression_score,
+        'level depresi' : data.depression_level,
+        'nilai kecemasan' : data.anxiety_score,
+        'level kecemasan' : data.anxiety_level,
+        'nilai stres' : data.stress_score,
+        'level stres' : data.stress_level,
+      }
 
-    return response.status(201).send('Created')
+      console.log(doc.title)
+
+
+      const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id]
+
+
+      var newRow = await sheet.addRow(rowData)
+
+      return response.status(201).send('Created')
     }
     catch(err){
       return response.status(402).send(err)

@@ -63,6 +63,7 @@ class AuthController {
         .orderBy('created_at', 'desc')
         .limit(1)
 
+        console.log(latestResult)
       //ada latestResult (sudah pernah test)
       if (Array.isArray(latestResult) && latestResult.length) {
 
@@ -72,7 +73,7 @@ class AuthController {
 
         //apabila jarak test kurang dari 10 hari
         if (daysDifference <= 10) {
-
+          console.log("ga oleh")
           let payload = {
             allow: 0,
             messages: 'Difference between test is less than 10 days'
@@ -85,7 +86,7 @@ class AuthController {
           let userId = {
             user_id: user_id
           }
-
+          console.log("lebih 10 hari")
           // Append token to user
           Object.assign(userId, token)
           return response.json(userId)
@@ -100,7 +101,7 @@ class AuthController {
           user_id: user.id
         }
 
-
+        console.log("belum tes")
         // Append token to user
         Object.assign(userId, token)
 
@@ -192,9 +193,13 @@ class AuthController {
           return response.badRequest('User not found')
         } else {
 
-          let address = payload.provinsi + ';' + payload.kabupaten+ ';' + payload.kecamatan + ';' + payload.alamat
+          // let address = payload.provinsi + ';' + payload.kabupaten+ ';' + payload.kecamatan + ';' + payload.alamat
 
-          user.address = address
+          user.address = payload.alamat
+          user.provinsi = payload.provinsi
+          user.kabupaten = payload.kabupaten
+          user.kecamatan = payload.kecamatan
+
           user.name = payload.name
           user.nik = payload.nik
           user.phone = payload.phone

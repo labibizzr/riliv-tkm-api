@@ -6,6 +6,9 @@ tmp
 
 # Environment variables, never commit this file
 .env
+client_secret.json
+soal.json
+answer.json
 app/Controllers/Http/DummyController.js
 # The development sqlite file
 database/*.sqlite
