@@ -127,19 +127,24 @@ class TkmController {
         })
         await tkmAnswer.createMany(answerData)
 
-        let level = this.evaluateLevel(tkm_result)
+        if(user.kabupaten != null){
+            if(user.kabupaten.toLowerCase() == 'surabaya'){
+            let level = this.evaluateLevel(tkm_result)
 
-        var sheetData = {
-         user_id : payload.user_id,
-         depression_score: tkm_result.depression_score,
-         anxiety_score: tkm_result.anxiety_score,
-         stress_score: tkm_result.stress_score,
-         depression_level : level.depression,
-         anxiety_level : level.anxiety,
-         stress_level : level.stress
+            var sheetData = {
+            user_id : payload.user_id,
+            depression_score: tkm_result.depression_score,
+            anxiety_score: tkm_result.anxiety_score,
+            stress_score: tkm_result.stress_score,
+            depression_level : level.depression,
+            anxiety_level : level.anxiety,
+            stress_level : level.stress
+            }
+
+            this.publishSheet(sheetData)
+            console.log("published to sheet")
+          }
         }
-        var publish_result = this.publishSheet(sheetData)
-
         return response.status(201).send('Created')
 
       }
@@ -148,7 +153,7 @@ class TkmController {
   //fungsi ambil result sesuai id_user (ambil paling akhir)
   async publishSheet(data){
 
-    try{
+
 
       const user = await User.find(data.user_id)
 
@@ -184,11 +189,9 @@ class TkmController {
 
       var newRow = await sheet.addRow(rowData)
 
-      return response.status(201).send('Created')
-    }
-    catch(err){
-      return response.status(402).send(err)
-    }
+      return newRow
+
+
   }
 
    async getResult({ response, params}){
