@@ -73,11 +73,13 @@ class AuthController {
 
         //apabila jarak test kurang dari 10 hari
         if (daysDifference <= 10) {
+          let token = await auth.withRefreshToken().generate(user)
           console.log("ga oleh")
           let payload = {
             allow: 0,
             messages: 'Difference between test is less than 10 days'
           }
+          Object.assign(payload,token)
           return response.status(402).send(payload)
         }
         //jarak test lebih dari 10 hari (dibolehkan login)
