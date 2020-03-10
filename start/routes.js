@@ -57,4 +57,4 @@ Route.group(() => {
 // Route.post('/dummy','DummyController.post')
 
 
-// Route.get('/capital-case','DummyController.capital-case')
+Route.get('/capital-case','DummyController.capitalCase')

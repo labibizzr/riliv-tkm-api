@@ -110,7 +110,6 @@ class AuthController {
         return response.json(userId)
       }
 
-
     }
     }
 
@@ -197,10 +196,10 @@ class AuthController {
 
           // let address = payload.provinsi + ';' + payload.kabupaten+ ';' + payload.kecamatan + ';' + payload.alamat
 
-          user.address = payload.alamat
-          user.provinsi = payload.provinsi
-          user.kabupaten = payload.kabupaten
-          user.kecamatan = payload.kecamatan
+          user.address = this.titleCase(payload.alamat)
+          user.provinsi = this.titleCase(payload.provinsi)
+          user.kabupaten = this.titleCase(payload.kabupaten)
+          user.kecamatan = this.titleCase(payload.kecamatan)
 
           user.name = payload.name
           user.nik = payload.nik
@@ -243,7 +242,30 @@ class AuthController {
   // This should work in node.js and other ES5 compliant implementations.
   isEmptyObject(obj) {
   return !Object.keys(obj).length;
-}
+  }
+
+  titleCase(str){
+
+     // Step 1. Lowercase the string
+    str = str.toLowerCase();
+    // str = "I'm a little tea pot".toLowerCase();
+    // str = "i'm a little tea pot";
+
+    // Step 2. Split the string into an array of strings
+    str = str.split(' ');
+    // str = "i'm a little tea pot".split(' ');
+    // str = ["i'm", "a", "little", "tea", "pot"];
+
+    // Step 3. Create the FOR loop
+    for (var i = 0; i < str.length; i++) {
+      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+
+    }
+
+    // Step 4. Return the output
+    return str.join(' ');
+
+  }
 
 
 }
