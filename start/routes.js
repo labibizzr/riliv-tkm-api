@@ -54,4 +54,7 @@ Route.group(() => {
 .prefix('api/v0/tkm')
 
 
-Route.post('/dummy','DummyController.post')
+// Route.post('/dummy','DummyController.post')
+
+
+// Route.get('/capital-case','DummyController.capital-case')

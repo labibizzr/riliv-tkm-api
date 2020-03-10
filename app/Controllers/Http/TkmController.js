@@ -128,7 +128,7 @@ class TkmController {
         await tkmAnswer.createMany(answerData)
 
         if(user.kabupaten != null){
-            if(user.kabupaten.toLowerCase() == 'surabaya'){
+            if(user.kabupaten.toLowerCase() == 'kota surabaya'){
             let level = this.evaluateLevel(tkm_result)
 
             var sheetData = {
@@ -152,7 +152,6 @@ class TkmController {
 
   //fungsi ambil result sesuai id_user (ambil paling akhir)
   async publishSheet(data){
-
 
 
       const user = await User.find(data.user_id)

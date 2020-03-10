@@ -10,6 +10,7 @@ client_secret.json
 soal.json
 answer.json
 app/Controllers/Http/DummyController.js
+app/Controllers/Http/SheetController.js
 # The development sqlite file
 database/*.sqlite
 
