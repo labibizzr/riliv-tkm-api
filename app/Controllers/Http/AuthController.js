@@ -126,10 +126,10 @@ class AuthController {
       }
       else{ //apabila ada user
 
-        if(user.birthdate == null){
+        if(user.bornday == null){
           var status = 0
         }
-        else if(user.birthdate != null){
+        else if(user.bornday != null){
          var status = 1
         }
 
@@ -205,7 +205,7 @@ class AuthController {
           user.nik = payload.nik
           user.phone = payload.phone
           user.gender = payload.gender
-          user.birthdate = payload.birthdate
+          user.bornday = payload.birthdate
 
           await user.save()
           return response.json({

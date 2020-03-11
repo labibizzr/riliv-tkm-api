@@ -171,7 +171,7 @@ class TkmController {
         kecamatan : user.kecamatan,
         nik : user.nik,
         'jenis kelamin' : user.gender,
-        'tgl lahir' : moment(user.birthdate).format("D/MM/YYYY"),
+        'tgl lahir' : moment(user.bornday).format("D/MM/YYYY"),
         'nilai depresi' : data.depression_score,
         'level depresi' : data.depression_level,
         'nilai kecemasan' : data.anxiety_score,
