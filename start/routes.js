@@ -47,8 +47,7 @@ Route.group(() => {
 
   //simpan informasi2 tambahan
   Route.post('/user/register','AuthController.register')
-  //check apakah user sudah register (mengisi data) atau belum. Return status = 0 jika belum, status = 1 jika sudah
-  Route.get('user/register/check/:userId','AuthController.checkUser')
+
   Route.get('sheet','SheetController.write')
 })
 .prefix('api/v0/tkm')

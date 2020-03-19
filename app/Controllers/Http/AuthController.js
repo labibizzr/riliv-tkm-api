@@ -37,12 +37,13 @@ class AuthController {
       await newUser.save()
 
       let token = await auth
-                    // .withRefreshToken()
-                    .generate(newUser)
+        // .withRefreshToken()
+        .generate(newUser)
 
 
       let newUserId = {
-        user_id: newUser.id
+        user_id: newUser.id,
+        registered : 0
       }
 
       // Append token to user
@@ -63,35 +64,37 @@ class AuthController {
         .orderBy('created_at', 'desc')
         .limit(1)
 
-        console.log(latestResult)
+      console.log(latestResult)
       //ada latestResult (sudah pernah test)
       if (Array.isArray(latestResult) && latestResult.length) {
 
         let resultDate = moment(latestResult[0].created_at)
         let nowDate = moment()
         let daysDifference = nowDate.diff(resultDate, 'days') + 1
-
+        var registered = this.checkUser(user)
         //apabila jarak test kurang dari 10 hari
         if (daysDifference <= 10) {
           let token = await auth.withRefreshToken().generate(user)
           console.log("ga oleh")
           let payload = {
             allow: 0,
-            messages: 'Difference between test is less than 10 days'
+            messages: 'Difference between test is less than 10 days',
+            registered : registered
           }
-          Object.assign(payload,token)
+          Object.assign(payload, token)
           return response.status(402).send(payload)
         }
         //jarak test lebih dari 10 hari (dibolehkan login)
         else {
           let token = await auth.withRefreshToken().generate(user)
-          let userId = {
-            user_id: user_id
+          let packet = {
+            user_id: user_id,
+            registered : registered
           }
           console.log("lebih 10 hari")
           // Append token to user
-          Object.assign(userId, token)
-          return response.json(userId)
+          Object.assign(packet, token)
+          return response.json(packet)
         }
       }
       //User sudah ada, belum pernah tes tkm
@@ -99,49 +102,39 @@ class AuthController {
 
         let token = await auth.withRefreshToken().generate(user)
 
-        let userId = {
-          user_id: user.id
+        var registered = this.checkUser(user)
+        console.log(`registered : ${registered}`)
+        let packet = {
+          user_id: user.id,
+          registered : registered
         }
 
         console.log("belum tes")
         // Append token to user
-        Object.assign(userId, token)
+        Object.assign(packet, token)
 
-        return response.json(userId)
+        return response.json(packet)
       }
-
     }
-    }
+  }
 
-    async checkUser({response, params}){
+  checkUser(user) {
 
-      console.log(params)
+    if (user == null) { //apabila tidak ada user
+      var registered = false
+    } else { //apabila ada user
 
-      let userId = params.userId
-
-      let user = await User.find(userId) //cari user
-
-      if (user == null){ //apabila tidak ada user
-        return response.badRequest('User not found')
+      if (user.bornday == null) {
+        var registered = false
+      } else if (user.bornday != null) {
+        var registered = true
       }
-      else{ //apabila ada user
-
-        if(user.bornday == null){
-          var status = 0
-        }
-        else if(user.bornday != null){
-         var status = 1
-        }
-
-        let data = {
-          status : status,
-          user_id : user.id
-        }
-
-        return response.json(data)
-      }
-
+      // console.log(`registered : ${registered}`)
+      return registered
     }
+  }
+
+
 
     async register({request, response}){
 
@@ -205,7 +198,7 @@ class AuthController {
           user.nik = payload.nik
           user.phone = payload.phone
           user.gender = payload.gender
-          user.bornday = payload.birthdate
+          user.bornday = payload.birthdate //paket masih bernama 'birthdate'
 
           await user.save()
           return response.json({
