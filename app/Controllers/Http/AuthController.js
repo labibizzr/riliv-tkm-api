@@ -74,6 +74,7 @@ class AuthController {
           let token = await auth.withRefreshToken().generate(user)
 
           let payload = {
+            user_id : user.id,
             allow: 0,
             messages: 'Difference between test is less than 10 days',
             registered : registered
