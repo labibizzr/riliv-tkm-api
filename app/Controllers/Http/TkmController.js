@@ -194,45 +194,38 @@ class TkmController {
 
    async getResult({ response, params, auth}){
 
-    try{
-       let user = await auth.getUser()
+    let user = await auth.getUser()
 
-       //userId request sama dengan user token
-       if(user.id == params.userId){
-        let user_id = params.userId
+    let isCorrectUserId = (user.id == params.userId)
 
+    if(isCorrectUserId){
 
-        //get latest result from table
-        let resultData = await Database
-          .select('*')
-          .from('tkm_results')
-          .where('user_id', '=', user_id)
-          .orderBy('id', 'desc')
-          .limit(1)
+      let resultData = await tkmResult.findBy('user_id',user.id)
 
-        let level = this.evaluateLevel(resultData[0])
+      let level = this.evaluateLevel(resultData)
 
-
-        let data = {
-          user_id: user_id,
-          depression_score: resultData[0].depression_score,
-          anxiety_score: resultData[0].anxiety_score,
-          stress_score: resultData[0].stress_score,
-          depression_level : level.depression,
-          anxiety_level : level.anxiety,
-          stress_level : level.stress
-        }
-        return data
+      let data = {
+        user_id: user.id,
+        depression_score: resultData.depression_score,
+        anxiety_score: resultData.anxiety_score,
+        stress_score: resultData.stress_score,
+        depression_level : level.depression,
+        anxiety_level : level.anxiety,
+        stress_level : level.stress
       }
+      return data
+    }
       //user id request tidak sama dengan token (unauthorized)
-      else{
-        return response.status(401).send('Unauthorized user')
-      }
+    else{
+        let messages = {
+          message : 'unauthorized user',
+          isAllowed : false
+        }
+        return response.status(401).send(messages)
     }
-    catch(error){
-      return response.badRequest("Something's wrong")
-    }
-    }
+  }
+
+
 
   //input object JSON dengan nilai score DAS
   //output object JSOn dengan LEVEL DAS

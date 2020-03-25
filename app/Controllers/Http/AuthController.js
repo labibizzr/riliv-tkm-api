@@ -10,9 +10,10 @@ class AuthController {
 
   async login({ request, auth, response })
   {
+
     let data = request.all()
 
-    // return data
+
     const userData = {
       email: data.email,
       image: data.avatar,
@@ -24,9 +25,7 @@ class AuthController {
     //find user by field 'EMAIL'
     const user = await User.findBy('email', userData.email)
 
-
-    // return user == null (tidak ada user dengan email yg sama)
-
+    // membuat user baru
     if (user == null) {
 
       let newUser = new User()
@@ -43,7 +42,7 @@ class AuthController {
 
       let newUserId = {
         user_id: newUser.id,
-        registered : 0
+        registered : false
       }
 
       // Append token to user
@@ -64,8 +63,6 @@ class AuthController {
         .orderBy('created_at', 'desc')
         .limit(1)
 
-      console.log(latestResult)
-      //ada latestResult (sudah pernah test)
       if (Array.isArray(latestResult) && latestResult.length) {
 
         let resultDate = moment(latestResult[0].created_at)
@@ -75,7 +72,7 @@ class AuthController {
         //apabila jarak test kurang dari 10 hari
         if (daysDifference <= 10) {
           let token = await auth.withRefreshToken().generate(user)
-          console.log("ga oleh")
+
           let payload = {
             allow: 0,
             messages: 'Difference between test is less than 10 days',
@@ -225,6 +222,7 @@ class AuthController {
       try {
         // const result = await auth.getUser()
         const result = await auth.check()
+
         return response.json(result)
 
       } catch (error) {

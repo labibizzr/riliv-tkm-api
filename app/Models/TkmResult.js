@@ -13,6 +13,10 @@ class TkmResult extends Model {
     return this.belongsTo('App/Models/User')
   }
 
+  static get table () {
+    return 'tkm_results'
+  }
+
 }
 
 module.exports = TkmResult
