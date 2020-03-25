@@ -18,9 +18,7 @@ const moment = require('moment');
 
 class TkmController {
 
-  async getSoal({
-    response
-  }) {
+  async getSoal({response}) {
 
     const tkmQuestion = use('App/Models/TkmQuestion')
 
@@ -68,7 +66,6 @@ class TkmController {
 
   //menyimpan jawaban user sekaligus memberikan nilai terhadap jawaban tersebut
   async store({request,response}) {
-
 
     let payload = request.all()
 
@@ -153,7 +150,6 @@ class TkmController {
   //fungsi ambil result sesuai id_user (ambil paling akhir)
   async publishSheet(data){
 
-
       const user = await User.find(data.user_id)
 
       const doc = new GoogleSpreadsheet(Env.get('SPREADSHEET_ID'));
@@ -180,11 +176,9 @@ class TkmController {
         'level stres' : data.stress_level,
       }
 
-      console.log(doc.title)
-
+      // console.log(doc.title)
 
       const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id]
-
 
       var newRow = await sheet.addRow(rowData)
 
