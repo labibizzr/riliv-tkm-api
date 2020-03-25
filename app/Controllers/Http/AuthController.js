@@ -8,8 +8,7 @@ const {rule} = use('indicative')
 class AuthController {
 
 
-  async login({ request, auth, response })
-  {
+  async login({ request, auth, response }){
 
     let data = request.all()
 
@@ -20,7 +19,6 @@ class AuthController {
       name: data.name,
       roleId: '2'
     }
-
 
     //find user by field 'EMAIL'
     const user = await User.findBy('email', userData.email)
@@ -42,7 +40,8 @@ class AuthController {
 
       let newUserId = {
         user_id: newUser.id,
-        registered : false
+        registered : false,
+        allow : 1
       }
 
       // Append token to user
@@ -69,6 +68,7 @@ class AuthController {
         let nowDate = moment()
         let daysDifference = nowDate.diff(resultDate, 'days') + 1
         var registered = this.checkUser(user)
+
         //apabila jarak test kurang dari 10 hari
         if (daysDifference <= 10) {
           let token = await auth.withRefreshToken().generate(user)
@@ -87,7 +87,8 @@ class AuthController {
           let token = await auth.withRefreshToken().generate(user)
           let packet = {
             user_id: user_id,
-            registered : registered
+            registered : registered,
+            allow: 1
           }
           console.log("lebih 10 hari")
           // Append token to user
@@ -104,7 +105,8 @@ class AuthController {
         console.log(`registered : ${registered}`)
         let packet = {
           user_id: user.id,
-          registered : registered
+          registered : registered,
+          allow : 1
         }
 
         console.log("belum tes")
