@@ -194,7 +194,13 @@ class TkmController {
 
     if(isCorrectUserId){
 
-      let resultData = await tkmResult.findBy('user_id',user.id)
+      let resultDataQuery = await Database
+        .select('*')
+        .from('tkm_results')
+        .where('user_id', '=' ,user.id)
+        .orderBy('id','desc')
+        .limit(1)
+      let resultData = resultDataQuery[0]
 
       let level = this.evaluateLevel(resultData)
 
